@@ -6,7 +6,6 @@
 	</head>
 
 	<body>
-		
 		<?php
 		# Ex 4 : 
 		# Check the existance of each parameter using the PHP function 'isset'.
@@ -27,9 +26,8 @@
 		<?php
 		# Ex 5 : 
 		# Check if the name is composed of alphabets, dash(-), ora single white space.
-		} elseif (false) { 
+		} elseif (!preg_match("/^[a-z][a-z -]*$/i", $name)) { 
 		?>
-
 			Display the below error message : 
 			<h1>Sorry</h1>
 			<p>You didn't provide a valid name. Try again?</p>
@@ -38,7 +36,7 @@
 		# Ex 5 : 
 		# Check if the credit card number is composed of exactly 16 digits.
 		# Check if the Visa card starts with 4 and MasterCard starts with 5.
-		} elseif (false) {
+		} elseif (!preg_match_all("/\d{16}/", $creditNum) || !(($cc=="Visa" && $creditNum[0]=="4") || ($cc=="MasterCard" && $creditNum[0]=="5"))) {
 		?>
 			Display the below error message : 
 			<h1>Sorry</h1>
@@ -62,29 +60,25 @@
 			<li>Credit <?=$creditNum?>(<?=$cc?>)</li>
 		</ul>
 		
-		<!-- Ex 3 : 
-			<p>Here are all the loosers who have submitted here:</p> -->
+			<p>Here are all the loosers who have submitted here:</p>
 		<?php
 			$filename = "loosers.txt";
 			/* Ex 3: 
 			 * Save the submitted data to the file 'loosers.txt' in the format of : "name;id;cardnumber;cardtype".
 			 * For example, "Scott Lee;20110115238;4300523877775238;visa"
 			 */
-			 file_put_contents("loosers.txt", $name.";".$id.";".$creditNum.";".$cc."\t", FILE_APPEND); 
+			 file_put_contents("loosers.txt", $name.";".$id.";".$creditNum.";".$cc."\n", FILE_APPEND); 
 		?>
 		
 		<!-- Ex 3: Show the complete contents of "loosers.txt".
 			 Place the file contents into an HTML <pre> element to preserve whitespace -->
-			 	
-		<p>Here are all the loosers who have submitted here:</p>
 		<?php
-			$lines = file_get_contents($filename); ?>
-			<p><?=$lines?></p>
-		<?php
-			foreach ($lines as $key) {
-				print_r("hello");
-			} ?>
-		<?php
+			$lines = file($filename);
+			
+			foreach ($lines as $key) { ?>
+				<p><?=$key?></p>
+		<?php }
+		
 			/* Ex 2: 
 			 * Assume that the argument to this function is array of names for the checkboxes ("cse326", "cse107", "cse603", "cin870")
 			 * 
@@ -93,17 +87,16 @@
 			 * For example, "cse326, cse603, cin870"
 			 */
 		}
-		function checkName($name) {
-
-		}
 		function processCheckbox($names){
 			$result = "";
 			foreach ($names as $key) {
 				$check = $_POST[$key];
 				if(isset($check)) {
-					$result = $result.$check;
-					if($key != "cin870") {
-						$result = $result.", ";
+					if($result=="") {
+						$result = $check;
+					}
+					else {
+						$result = $result.", ".$check;
 					}
 				}
 			}
